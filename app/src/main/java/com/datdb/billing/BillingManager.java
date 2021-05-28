@@ -23,11 +23,22 @@ import com.datdb.billing.model.SkuDetails;
 import org.json.JSONException;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @SuppressLint("StaticFieldLeak")
 public class BillingManager {
+
+    public interface BillingResponseCode extends BillingClient.BillingResponseCode {
+
+    }
+
+    public interface SkuType extends BillingClient.SkuType {
+
+    }
+
+    public interface FeatureType extends BillingClient.FeatureType {
+
+    }
 
     private static BillingManager instance;
     private BillingClient billingClient;
