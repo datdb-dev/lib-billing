@@ -20,6 +20,8 @@ import com.datdb.billing.callback.SkuDetailsResponseListener;
 import com.datdb.billing.model.Purchase;
 import com.datdb.billing.model.SkuDetails;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -48,7 +50,14 @@ public class BillingManager {
         @Override
         public void onPurchasesUpdated(BillingResult billingResult, List<com.android.billingclient.api.Purchase> list) {
             for (OnBillingListener listener : onBillingListeners) {
-                List<Purchase> listPurchase = new ArrayList<>((Collection<? extends Purchase>) list);
+                List<Purchase> listPurchase = new ArrayList<>();
+                for (com.android.billingclient.api.Purchase p : list) {
+                    try {
+                        listPurchase.add(new Purchase(p.getOriginalJson(), p.getSignature()));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
                 listener.onPurchasesUpdated(billingResult.getResponseCode(), billingResult.getDebugMessage(), listPurchase);
             }
         }
@@ -114,8 +123,15 @@ public class BillingManager {
 
                 @Override
                 public void onSkuDetailsResponse(BillingResult billingResult, List<com.android.billingclient.api.SkuDetails> list) {
-                    List<SkuDetails> listPurchase = new ArrayList<>((Collection<? extends SkuDetails>) list);
-                    listener.onSkuDetailsResponse(billingResult.getResponseCode(), billingResult.getDebugMessage(), listPurchase);
+                    List<SkuDetails> skuDetails = new ArrayList<>();
+                    for (com.android.billingclient.api.SkuDetails s : list) {
+                        try {
+                            skuDetails.add(new SkuDetails(s.getOriginalJson()));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    listener.onSkuDetailsResponse(billingResult.getResponseCode(), billingResult.getDebugMessage(), skuDetails);
                 }
             });
         }
@@ -187,7 +203,16 @@ public class BillingManager {
         if (billingClient.isReady()) {
             Purchase.PurchasesResult purchasesResult = billingClient.queryPurchases(skyType);
             if (purchasesResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                return new ArrayList<>((Collection<? extends Purchase>) purchasesResult.getPurchasesList());
+                List<com.android.billingclient.api.Purchase> list = purchasesResult.getPurchasesList();
+                List<Purchase> listPurchase = new ArrayList<>();
+                for (com.android.billingclient.api.Purchase p : list) {
+                    try {
+                        listPurchase.add(new Purchase(p.getOriginalJson(), p.getSignature()));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return listPurchase;
             }
         }
         return new ArrayList<>();
