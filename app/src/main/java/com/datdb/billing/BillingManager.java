@@ -232,7 +232,7 @@ public class BillingManager {
     public boolean checkPurchase(String type, String id) {
         List<Purchase> purchases = queryPurchases(type);
         for (Purchase p : purchases) {
-            if (p.getSku().equals(id)) {
+            if (p.getSkus().get(0).equals(id)) {
                 return true;
             }
         }
