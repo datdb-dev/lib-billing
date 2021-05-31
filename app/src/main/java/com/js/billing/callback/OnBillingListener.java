@@ -1,6 +1,6 @@
-package com.datdb.billing.callback;
+package com.js.billing.callback;
 
-import com.datdb.billing.model.Purchase;
+import com.js.billing.model.Purchase;
 
 import java.util.List;
 

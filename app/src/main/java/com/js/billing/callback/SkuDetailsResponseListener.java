@@ -1,6 +1,6 @@
-package com.datdb.billing.callback;
+package com.js.billing.callback;
 
-import com.datdb.billing.model.SkuDetails;
+import com.js.billing.model.SkuDetails;
 
 import java.util.List;
 

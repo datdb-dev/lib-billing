@@ -1,4 +1,4 @@
-package com.datdb.billing;
+package com.js.billing;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -13,12 +13,12 @@ import com.android.billingclient.api.ConsumeParams;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetailsParams;
 
-import com.datdb.billing.callback.AcknowledgePurchaseResponseListener;
-import com.datdb.billing.callback.ConsumeResponseListener;
-import com.datdb.billing.callback.OnBillingListener;
-import com.datdb.billing.callback.SkuDetailsResponseListener;
-import com.datdb.billing.model.Purchase;
-import com.datdb.billing.model.SkuDetails;
+import com.js.billing.callback.AcknowledgePurchaseResponseListener;
+import com.js.billing.callback.ConsumeResponseListener;
+import com.js.billing.callback.OnBillingListener;
+import com.js.billing.callback.SkuDetailsResponseListener;
+import com.js.billing.model.Purchase;
+import com.js.billing.model.SkuDetails;
 
 import org.json.JSONException;
 

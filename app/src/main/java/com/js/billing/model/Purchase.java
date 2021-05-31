@@ -1,4 +1,4 @@
-package com.datdb.billing.model;
+package com.js.billing.model;
 
 import org.json.JSONException;
 

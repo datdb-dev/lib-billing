@@ -1,4 +1,4 @@
-package com.datdb.billing;
+package com.js.billing;
 
 import com.android.billingclient.api.BillingClient;
 
