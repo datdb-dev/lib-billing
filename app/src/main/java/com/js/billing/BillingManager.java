@@ -47,16 +47,18 @@ public class BillingManager {
     private final PurchasesUpdatedListener purchasesUpdatedListener = new PurchasesUpdatedListener() {
         @Override
         public void onPurchasesUpdated(BillingResult billingResult, List<com.android.billingclient.api.Purchase> list) {
-            for (OnBillingListener listener : onBillingListeners) {
-                List<Purchase> listPurchase = new ArrayList<>();
-                for (com.android.billingclient.api.Purchase p : list) {
-                    try {
-                        listPurchase.add(new Purchase(p.getOriginalJson(), p.getSignature()));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+            if (list != null && list.size() > 0) {
+                for (OnBillingListener listener : onBillingListeners) {
+                    List<Purchase> listPurchase = new ArrayList<>();
+                    for (com.android.billingclient.api.Purchase p : list) {
+                        try {
+                            listPurchase.add(new Purchase(p.getOriginalJson(), p.getSignature()));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
+                    listener.onPurchasesUpdated(billingResult.getResponseCode(), billingResult.getDebugMessage(), listPurchase);
                 }
-                listener.onPurchasesUpdated(billingResult.getResponseCode(), billingResult.getDebugMessage(), listPurchase);
             }
         }
     };
@@ -93,10 +95,11 @@ public class BillingManager {
         onBillingListeners.clear();
     }
 
-    public void launchBillingFlow(Activity activity, SkuDetails skuDetails) {
+    public void launchBillingFlow(Activity activity, SkuDetails skuDetails) throws JSONException {
         if (billingClient.isReady()) {
+            com.android.billingclient.api.SkuDetails details = new com.android.billingclient.api.SkuDetails(skuDetails.getOriginalJson());
             BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
-                    .setSkuDetails(skuDetails)
+                    .setSkuDetails(details)
                     .build();
             billingClient.launchBillingFlow(activity, billingFlowParams);
         }
@@ -199,7 +202,7 @@ public class BillingManager {
      */
     public List<Purchase> queryPurchases(String skyType) {
         if (billingClient.isReady()) {
-            Purchase.PurchasesResult purchasesResult = billingClient.queryPurchases(skyType);
+            com.android.billingclient.api.Purchase.PurchasesResult purchasesResult = billingClient.queryPurchases(skyType);
             if (purchasesResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                 List<com.android.billingclient.api.Purchase> list = purchasesResult.getPurchasesList();
                 List<Purchase> listPurchase = new ArrayList<>();
